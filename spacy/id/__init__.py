@@ -22,6 +22,10 @@ class Bahasa(Language):
         tag_map = TAG_MAP
         stop_words = STOP_WORDS
 
+        #lemma_exc = 
+        #lemma_index = 
+        #lemma_rules = 
+
     def __init__(self, **overrides):
         overrides = fix_glove_vectors_loading(overrides)
         Language.__init__(self, **overrides)
