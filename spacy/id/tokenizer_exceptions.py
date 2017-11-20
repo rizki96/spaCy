@@ -4,10 +4,8 @@ from __future__ import unicode_literals
 import regex as re
 
 from ..symbols import *
-#from ..language_data import PRON_LEMMA
 
 from ._tokenizer_exceptions_list import ID_BASE_EXCEPTIONS
-#from ..tokenizer_exceptions import TOKEN_MATCH
 
 
 _exc = {}
