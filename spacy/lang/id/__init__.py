@@ -15,7 +15,10 @@ from ...attrs import LANG
 from ...util import update_exc
 
 
-class IndonesianDefaults(Language.Defaults):
+def _return_id(_):
+    return 'id'
+
+class BahasaDefaults(Language.Defaults):
     lex_attr_getters = dict(Language.Defaults.lex_attr_getters)
     lex_attr_getters[LANG] = lambda text: 'id'
     lex_attr_getters.update(LEX_ATTRS)
@@ -28,9 +31,9 @@ class IndonesianDefaults(Language.Defaults):
     lemma_lookup = LOOKUP
 
 
-class Indonesian(Language):
+class Bahasa(Language):
     lang = 'id'
-    Defaults = IndonesianDefaults
+    Defaults = BahasaDefaults
 
 
-__all__ = ['Indonesian']
+__all__ = ['Bahasa']
