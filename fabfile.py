@@ -44,7 +44,6 @@ def env(lang='python3.6'):
         venv_local('pip install pex --no-cache-dir')
 
 
-
 def install():
     with virtualenv(VENV_DIR) as venv_local:
         venv_local('pip install dist/*.tar.gz')
@@ -72,6 +71,10 @@ def pex():
             venv_local('pex dist/*.whl -e spacy -o dist/spacy-%s.pex' % sha,
                 direct=True)
 
+def sdist():
+    with virtualenv(VENV_DIR):
+        with lcd(path.dirname(__file__)):
+            local('python setup.py sdist')
 
 def clean():
     with lcd(path.dirname(__file__)):
