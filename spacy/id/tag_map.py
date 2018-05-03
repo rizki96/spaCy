@@ -37,7 +37,7 @@ TAG_MAP = {
 	"OP": 	{POS: PUNCT},
 	"CP": 	{POS: PUNCT},
 	"CC": 	{POS: CONJ},
-	"SC": 	{POS: CONJ},
+	"SC": 	{POS: SCONJ},
 	"CDP": 	{POS: NUM},
 	"CDI": 	{POS: NUM},
 	"CDO": 	{POS: NUM},
