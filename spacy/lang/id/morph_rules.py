@@ -1,3 +1,3 @@
-MORPH_RULES={
+MORPH_RULES = {
 
 }

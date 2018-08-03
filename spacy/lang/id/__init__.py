@@ -5,6 +5,7 @@ from .stop_words import STOP_WORDS
 from .punctuation import TOKENIZER_SUFFIXES, TOKENIZER_PREFIXES, TOKENIZER_INFIXES
 from .tokenizer_exceptions import TOKENIZER_EXCEPTIONS
 from .norm_exceptions import NORM_EXCEPTIONS
+from .tag_map import TAG_MAP
 from .lemmatizer import LOOKUP
 from .lex_attrs import LEX_ATTRS
 from .syntax_iterators import SYNTAX_ITERATORS
@@ -34,5 +35,6 @@ class BahasaDefaults(Language.Defaults):
 class Bahasa(Language):
     lang = 'id'
     Defaults = BahasaDefaults
+
 
 __all__ = ['Bahasa']
