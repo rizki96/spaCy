@@ -11,9 +11,10 @@ from .lex_attrs import LEX_ATTRS
 from .syntax_iterators import SYNTAX_ITERATORS
 
 from ..tokenizer_exceptions import BASE_EXCEPTIONS
+from ..norm_exceptions import BASE_NORMS
 from ...language import Language
-from ...attrs import LANG
-from ...util import update_exc
+from ...attrs import LANG, NORM
+from ...util import update_exc, add_lookups
 
 
 class BahasaDefaults(Language.Defaults):
