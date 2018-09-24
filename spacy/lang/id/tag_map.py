@@ -21,7 +21,7 @@ TAG_MAP = {
 	"CONJ":     {POS: CONJ},
 	"ADJ":      {POS: ADJ},
 	"VERB":     {POS: VERB},
-        "SP":       {POS: SPACE},
+	"SP":       {POS: SPACE},
 }
 
 """
