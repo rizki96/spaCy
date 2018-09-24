@@ -16,22 +16,20 @@ from ...language import Language
 from ...attrs import LANG, NORM
 from ...util import update_exc, add_lookups
 
-
 class BahasaDefaults(Language.Defaults):
     lex_attr_getters = dict(Language.Defaults.lex_attr_getters)
-    lex_attr_getters[LANG] = lambda text: 'id'
     lex_attr_getters.update(LEX_ATTRS)
+    lex_attr_getters[LANG] = lambda text: 'id'
     lex_attr_getters[NORM] = add_lookups(Language.Defaults.lex_attr_getters[NORM],
                                          BASE_NORMS, NORM_EXCEPTIONS)
     tokenizer_exceptions = update_exc(BASE_EXCEPTIONS, TOKENIZER_EXCEPTIONS)
-
     tag_map = TAG_MAP
     stop_words = STOP_WORDS
     prefixes = TOKENIZER_PREFIXES
     suffixes = TOKENIZER_SUFFIXES
     infixes = TOKENIZER_INFIXES
-    syntax_iterators = SYNTAX_ITERATORS
     lemma_lookup = LOOKUP
+    syntax_iterators = SYNTAX_ITERATORS
 
 class Bahasa(Language):
     lang = 'id'
