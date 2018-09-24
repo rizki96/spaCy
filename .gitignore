@@ -53,6 +53,7 @@ var/
 *.egg
 .eggs
 MANIFEST
+data/
 
 # Temporary files
 *.~*
