@@ -5,7 +5,6 @@ from .stop_words import STOP_WORDS
 from .punctuation import TOKENIZER_SUFFIXES, TOKENIZER_PREFIXES, TOKENIZER_INFIXES
 from .tokenizer_exceptions import TOKENIZER_EXCEPTIONS
 from .norm_exceptions import NORM_EXCEPTIONS
-from .tag_map import TAG_MAP
 from .lemmatizer import LOOKUP
 from .lex_attrs import LEX_ATTRS
 from .syntax_iterators import SYNTAX_ITERATORS
@@ -17,14 +16,13 @@ from ...attrs import LANG, NORM
 from ...util import update_exc, add_lookups
 
 
-class BahasaDefaults(Language.Defaults):
+class IndonesianDefaults(Language.Defaults):
     lex_attr_getters = dict(Language.Defaults.lex_attr_getters)
     lex_attr_getters[LANG] = lambda text: 'id'
     lex_attr_getters.update(LEX_ATTRS)
     lex_attr_getters[NORM] = add_lookups(Language.Defaults.lex_attr_getters[NORM],
                                          BASE_NORMS, NORM_EXCEPTIONS)
     tokenizer_exceptions = update_exc(BASE_EXCEPTIONS, TOKENIZER_EXCEPTIONS)
-    tag_map = TAG_MAP
     stop_words = STOP_WORDS
     prefixes = TOKENIZER_PREFIXES
     suffixes = TOKENIZER_SUFFIXES
@@ -33,9 +31,9 @@ class BahasaDefaults(Language.Defaults):
     lemma_lookup = LOOKUP
 
 
-class Bahasa(Language):
+class Indonesian(Language):
     lang = 'id'
-    Defaults = BahasaDefaults
+    Defaults = IndonesianDefaults
 
 
-__all__ = ['Bahasa']
+__all__ = ['Indonesian']
