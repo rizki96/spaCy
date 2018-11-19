@@ -83,6 +83,13 @@ def main(train_file=None, eval_file=None, model=None, output_dir=None, n_iter=10
                     losses=losses)
             print('Losses', losses)
 
+    if output_dir is not None:
+        output_dir = Path(output_dir)
+        if not output_dir.exists():
+            output_dir.mkdir()
+        nlp.to_disk(output_dir)
+        print("Saved model to", output_dir)
+
     with open(eval_file, "r") as devfile_:
         TEST_DATA = hinted_tuple_hook(json.load(devfile_))
 
