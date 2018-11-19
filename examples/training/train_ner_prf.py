@@ -67,7 +67,13 @@ def main(train_file=None, eval_file=None, model=None, output_dir=None, n_iter=10
     other_pipes = [pipe for pipe in nlp.pipe_names if pipe != 'ner']
     with nlp.disable_pipes(*other_pipes):  # only train NER
         #print("#Epoch", "Loss", "P", "R", "F")
-        optimizer = nlp.begin_training()
+        if model is None:
+            optimizer = nlp.begin_training()
+        else:
+            # Note that 'begin_training' initializes the models, so it'll zero out
+            # existing entity types.
+            optimizer = nlp.entity.create_optimizer()
+
         for itn in range(n_iter):
             random.shuffle(train_sents)
             losses = {}
@@ -106,7 +112,7 @@ def main(train_file=None, eval_file=None, model=None, output_dir=None, n_iter=10
     c=0
     for text,annot in test_sents:
 
-        f=open("resume"+str(c)+".txt","w")
+        #f=open("resume"+str(c)+".txt","w")
         doc_to_test=nlp(text)
         d={}
         for ent in doc_to_test.ents:
@@ -114,12 +120,12 @@ def main(train_file=None, eval_file=None, model=None, output_dir=None, n_iter=10
         for ent in doc_to_test.ents:
             d[ent.label_].append(ent.text)
 
-        for i in set(d.keys()):
+        #for i in set(d.keys()):
+            #f.write("\n\n")
+            #f.write(i +":"+"\n")
+            #for j in set(d[i]):
+            #    f.write(j.replace('\n','')+"\n")
 
-            f.write("\n\n")
-            f.write(i +":"+"\n")
-            for j in set(d[i]):
-                f.write(j.replace('\n','')+"\n")
         d={}
         for ent in doc_to_test.ents:
             d[ent.label_]=[0,0,0,0,0,0]
