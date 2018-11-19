@@ -66,8 +66,7 @@ def main(train_file=None, eval_file=None, model=None, output_dir=None, n_iter=10
     # get names of other pipes to disable them during training
     other_pipes = [pipe for pipe in nlp.pipe_names if pipe != 'ner']
     with nlp.disable_pipes(*other_pipes):  # only train NER
-        print("#Epoch", "Loss", "P", "R", "F")
-        nlp.vocab.vectors.name = 'Indonesian GLOVE pretrained vectors'
+        #print("#Epoch", "Loss", "P", "R", "F")
         optimizer = nlp.begin_training()
         for itn in range(n_iter):
             random.shuffle(train_sents)
