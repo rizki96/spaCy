@@ -23,6 +23,41 @@ def hinted_tuple_hook(obj):
         return obj
 
 
+def make_doc(nlp, input_):
+    if isinstance(input_, bytes):
+        input_ = input_.decode('utf8')
+    if isinstance(input_, unicode):
+        return nlp.tokenizer(input_)
+    else:
+        return spacy.Doc(nlp.vocab, words=input_)
+
+
+def make_gold(nlp, input_, annotations):
+    doc = make_doc(nlp, input_)
+    #print(annotations)
+    annot_tuples = (None, None, None, None, None, annotations)
+    gold = spacy.gold.GoldParse.from_annot_tuples(doc, annot_tuples)
+    return gold
+
+
+def evaluate(nlp, examples):
+    scorer = spacy.scorer.Scorer()
+    for sent in examples:
+        if 'sentences' in sent:
+            for text, annot in sent['sentences']:
+                gold = make_gold(nlp, text, annot.get('entities'))
+                doc = nlp(text)
+                scorer.score(doc, gold)
+    return scorer.scores
+
+
+def report_scores(i, loss, scores):
+    precision = '%.2f' % scores['ents_p']
+    recall = '%.2f' % scores['ents_r']
+    f_measure = '%.2f' % scores['ents_f']
+    print('%d %s %s %s %s' % (i, float(loss), precision, recall, f_measure))
+
+
 @plac.annotations(
     train_file=("Training file for ner model", "option", "t", str),
     eval_file=("Evaluation data file to test ner model", "option", "e", str),
@@ -63,10 +98,13 @@ def main(train_file=None, eval_file=None, model=None, output_dir=None, n_iter=10
         if 'sentences' in sent:
             train_sents.extend(sent['sentences'])
     
+    with open(eval_file, "r") as devfile_:
+        TEST_DATA = hinted_tuple_hook(json.load(devfile_))
+
     # get names of other pipes to disable them during training
     other_pipes = [pipe for pipe in nlp.pipe_names if pipe != 'ner']
     with nlp.disable_pipes(*other_pipes):  # only train NER
-        #print("#Epoch", "Loss", "P", "R", "F")
+        print("#Epoch", "Loss", "P", "R", "F")
         if model is None:
             optimizer = nlp.begin_training()
         else:
@@ -87,7 +125,12 @@ def main(train_file=None, eval_file=None, model=None, output_dir=None, n_iter=10
                     drop=dropout,  # dropout - make it harder to memorise data
                     sgd=optimizer,  # callable to update weights
                     losses=losses)
-            print('Losses', losses)
+            #print('Losses', losses)
+            scores = evaluate(nlp, TEST_DATA)
+            report_scores(itn, losses['ner'], scores)
+        #nlp.average_weights()
+        scores = evaluate(nlp, TEST_DATA)
+        report_scores(itn+1, losses['ner'], scores)
 
     if output_dir is not None:
         output_dir = Path(output_dir)
@@ -96,9 +139,7 @@ def main(train_file=None, eval_file=None, model=None, output_dir=None, n_iter=10
         nlp.to_disk(output_dir)
         print("Saved model to", output_dir)
 
-    with open(eval_file, "r") as devfile_:
-        TEST_DATA = hinted_tuple_hook(json.load(devfile_))
-
+    """
     test_sents = []
     for sent in TEST_DATA:
         if 'sentences' in sent:
@@ -152,6 +193,7 @@ def main(train_file=None, eval_file=None, model=None, output_dir=None, n_iter=10
         print("Precision : "+str(d[i][1]/d[i][5]))
         print("Recall : "+str(d[i][2]/d[i][5]))
         print("F-score : "+str(d[i][3]/d[i][5]))
+    """
 
 
 if __name__ == '__main__':
