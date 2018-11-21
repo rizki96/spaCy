@@ -6,7 +6,7 @@ import spacy
 from spacy.util import minibatch, compounding
 from sklearn.metrics import classification_report
 from sklearn.metrics import precision_recall_fscore_support
-from spacy.gold import GoldParse
+from spacy.gold import GoldParse, biluo_tags_from_offsets
 from spacy.scorer import Scorer
 from sklearn.metrics import accuracy_score
 from pathlib import Path
@@ -26,7 +26,7 @@ def hinted_tuple_hook(obj):
 def make_doc(nlp, input_):
     if isinstance(input_, bytes):
         input_ = input_.decode('utf8')
-    if isinstance(input_, unicode):
+    if isinstance(input_, str):
         return nlp.tokenizer(input_)
     else:
         return spacy.Doc(nlp.vocab, words=input_)
@@ -47,7 +47,7 @@ def evaluate(nlp, examples):
             for text, annot in sent['sentences']:
                 gold = make_gold(nlp, text, annot.get('entities'))
                 doc = nlp(text)
-                scorer.score(doc, gold)
+                scorer.score(doc, gold, verbose=False)
     return scorer.scores
 
 
