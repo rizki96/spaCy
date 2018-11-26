@@ -76,9 +76,12 @@ def save_model(dirname, nlp, scores):
             acc_r.write(json.dumps(obj, indent=4))
         with open(dirname / 'meta.json', "r+") as acc_r:
             obj = json.loads(acc_r.read())
-            obj['accuracy']['ents_p'] = scores['ents_p']
-            obj['accuracy']['ents_r'] = scores['ents_r']
-            obj['accuracy']['ents_f'] = scores['ents_f']
+            if 'accuracy' not in obj:
+                obj['accuracy'] = scores
+            else:
+                obj['accuracy']['ents_p'] = scores['ents_p']
+                obj['accuracy']['ents_r'] = scores['ents_r']
+                obj['accuracy']['ents_f'] = scores['ents_f']
             acc_r.seek(0)
             acc_r.write(json.dumps(obj, indent=4))
             acc_r.truncate()
