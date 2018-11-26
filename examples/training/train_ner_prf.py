@@ -68,13 +68,13 @@ def save_model(dirname, nlp, scores):
             dirname.mkdir()
         nlp.to_disk(dirname)
         # update scores
-        with open(dirname.joinpath(Path('accuracy.json')), "w") as acc_r:
+        with open(dirname / 'accuracy.json', "w") as acc_r:
             obj = {}
             obj['ents_p'] = scores['ents_p']
             obj['ents_r'] = scores['ents_r']
             obj['ents_f'] = scores['ents_f']
             acc_r.write(json.dumps(obj, indent=4))
-        with open(dirname.joinpath(Path('meta.json')), "r+") as acc_r:
+        with open(dirname / 'meta.json', "r+") as acc_r:
             obj = json.loads(acc_r.read())
             obj['accuracy']['ents_p'] = scores['ents_p']
             obj['accuracy']['ents_r'] = scores['ents_r']
@@ -129,45 +129,42 @@ def main(train_file=None, eval_file=None, model=None, output_dir=None, n_iter=10
 
     # get names of other pipes to disable them during training
     other_pipes = [pipe for pipe in nlp.pipe_names if pipe != 'ner']
-    with nlp.disable_pipes(*other_pipes):  # only train NER
-        print("#Epoch", "Loss", "P", "R", "F")
-        #if model is None:
-        #    optimizer = nlp.begin_training()
-        #else:
-            # Note that 'begin_training' initializes the models, so it'll zero out
-            # existing entity types.
-        #    optimizer = nlp.entity.create_optimizer()
+    print("#Epoch", "Loss", "P", "R", "F")
+    try:
+        with nlp.disable_pipes(*other_pipes):  # only train NER
+            #if model is None:
+            #    optimizer = nlp.begin_training()
+            #else:
+                # Note that 'begin_training' initializes the models, so it'll zero out
+                # existing entity types.
+            #    optimizer = nlp.entity.create_optimizer()
 
-        optimizer = nlp.begin_training()
-        for itn in range(n_iter):
-            random.shuffle(train_sents)
-            losses = {}
-            # batch up the examples using spaCy's minibatch
-            batches = minibatch(train_sents, size=compounding(4., 32., 1.001))
-            for batch in batches:
-                texts, annotations = zip(*batch)
-                nlp.update(
-                    texts,  # batch of texts
-                    annotations,  # batch of annotations
-                    drop=dropout,  # dropout - make it harder to memorise data
-                    sgd=optimizer,  # callable to update weights
-                    losses=losses)
-            #print('Losses', losses)
+            optimizer = nlp.begin_training()
+            for itn in range(n_iter):
+                random.shuffle(train_sents)
+                losses = {}
+                # batch up the examples using spaCy's minibatch
+                batches = minibatch(train_sents, size=compounding(4., 32., 1.001))
+                for batch in batches:
+                    texts, annotations = zip(*batch)
+                    nlp.update(
+                        texts,  # batch of texts
+                        annotations,  # batch of annotations
+                        drop=dropout,  # dropout - make it harder to memorise data
+                        sgd=optimizer,  # callable to update weights
+                        losses=losses)
+                #print('Losses', losses)
+                scores = evaluate(nlp, TEST_DATA)
+                report_scores(itn, losses['ner'], scores)
+                # TODO: save every iteration in dirs
+                save_model(output_dir / ("model%s" % str(itn)), nlp, scores)
+
+    finally:
+        with nlp.use_params(optimizer.averages):
             scores = evaluate(nlp, TEST_DATA)
-            report_scores(itn, losses['ner'], scores)
-            # TODO: save every iteration in dirs
-            save_model(output_dir.joinpath(Path("model" + str(itn))), nlp, scores)
-        nlp.average_weights()
-        scores = evaluate(nlp, TEST_DATA)
-        report_scores(itn+1, losses['ner'], scores)
-        save_model(output_dir.joinpath(Path("model-final")), nlp, scores)
-
-    #if output_dir is not None:
-    #    output_dir = Path(output_dir)
-    #    if not output_dir.exists():
-    #        output_dir.mkdir()
-    #    nlp.to_disk(output_dir)
-    print("Saved models to: ", output_dir)
+            report_scores(itn+1, losses['ner'], scores)
+            save_model(output_dir / "model-final", nlp, scores)
+            print("Saved models to: ", output_dir)
 
     """
     test_sents = []
