@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from ...symbols import POS, PUNCT, SYM, ADJ, CONJ, SCONJ, NUM, DET, ADV, ADP, X, VERB, AUX
 from ...symbols import NOUN, PROPN, PART, INTJ, SPACE, PRON
 
+# using Universal POS Tagger
 TAG_MAP = {
 	"ADV":      {POS: ADV},
 	"NOUN":     {POS: NOUN},
@@ -25,6 +26,7 @@ TAG_MAP = {
 }
 
 """
+# original paper: https://www.researchgate.net/publication/209387036_HMM_Based_Part-of-Speech_Tagger_for_Bahasa_Indonesia
 TAG_MAP = {
         ".":    {POS: PUNCT},
         ",":    {POS: PUNCT},
