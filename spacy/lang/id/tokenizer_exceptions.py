@@ -221,6 +221,12 @@ for orth in [
     "s.d.",
     "tel.",
     "u.p.",
+    "nn.",
+    "ny.",
+    "tn.",
+    "Nn.",
+    "Ny.",
+    "Tn."
 ]:
     _exc[orth] = [{ORTH: orth}]
 
