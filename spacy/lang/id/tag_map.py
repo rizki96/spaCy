@@ -2,8 +2,9 @@
 from __future__ import unicode_literals
 
 from ...symbols import POS, PUNCT, ADJ, CCONJ, NUM, DET, ADV, ADP, X, VERB, CONJ, SYM
-from ...symbols import NOUN, PRON, AUX, SCONJ, INTJ, PART, PROPN
+from ...symbols import NOUN, PRON, AUX, SCONJ, INTJ, PART, PROPN, SPACE
 
+"""
 # using Universal POS Tagger
 TAG_MAP = {
 	"ADV":      {POS: ADV},
@@ -36,25 +37,31 @@ TAG_MAP = {
         "-":    {POS: PUNCT},
         "\"":   {POS: PUNCT},
         "...":  {POS: PUNCT},
+        "Z":    {POS: PUNCT},
         "GM":   {POS: PUNCT},
         "OP":   {POS: PUNCT},
         "CP":   {POS: PUNCT},
-        "CC":   {POS: CONJ},
+        "CC":   {POS: CCONJ},
         "SC":   {POS: SCONJ},
+        "CD":   {POS: NUM},
+        "OD":   {POS: NUM},
         "CDP":  {POS: NUM},
         "CDI":  {POS: NUM},
         "CDO":  {POS: NUM},
         "CDC":  {POS: NUM},
         "DT":   {POS: DET},
+        "X":    {POS: X},
         "FW":   {POS: X},
         "IN":   {POS: ADP},
         "JJ":   {POS: ADJ},
         "NN":   {POS: NOUN},
         "NNG":  {POS: NOUN},
         "NNP":  {POS: PROPN},
+        "PR":   {POS: PRON},
         "PRP":  {POS: PRON},
         "PRN":  {POS: PRON},
         "PRL":  {POS: PRON},
+        "WH":   {POS: PRON},
         "WP":   {POS: PRON},
         "RB":   {POS: ADV},
         "RP":   {POS: PART},
@@ -65,9 +72,8 @@ TAG_MAP = {
         "VBT":  {POS: VERB},
         "VBI":  {POS: VERB},
         "MD":   {POS: VERB},
-    	#"SP":   {POS: SPACE},
+    	"SP":   {POS: SPACE},
 }
-"""
 
 """
 # POS explanations for indonesian available from https://www.aclweb.org/anthology/Y12-1014
